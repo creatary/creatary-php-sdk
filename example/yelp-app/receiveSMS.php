@@ -1,7 +1,7 @@
 <?php
 
 /**
- * TAM: Example of receiving SMS and search for Yelp Info through TAM API using temporary token
+ * CREATARY: Example of receiving SMS and search for Yelp Info through Creatary API using temporary token
  *
  * @author Mikhael Harswanto, Tri Nugroho
  *
@@ -29,8 +29,8 @@
  */
 
 include_once "./include/defines.php";
-include_once "../../library/tam/sms.php";
-include_once "../../library/tam/location.php";
+include_once "../../library/creatary/sms.php";
+include_once "../../library/creatary/location.php";
 
 
 // The user id of the application user, 
@@ -49,7 +49,7 @@ Common::initOAuth("Session", Common::getServerOptions(), $curlOptions);
 
 try
 {
-	// STEP 1:  Get the temporary access token and token secret from TAM's incoming SMS request
+	// STEP 1:  Get the temporary access token and token secret from Creatary's incoming SMS request
 	$body = @file_get_contents('php://input');
 	$parsedBody = json_decode($body);		
 	$oauthAccessToken = $parsedBody->access_token;
@@ -101,7 +101,7 @@ try
 		//error_log('Error occured while get YELP info ', 0);
 	}
 
-	// STEP 6:  Send or reply the SMS to the subscriber using TAM Send SMS API.			
+	// STEP 6:  Send or reply the SMS to the subscriber using Creatary Send SMS API.			
 	$jsonResponse = SMSApi::sendSMS($usrId, $smsReply);
 			
 	if (is_null($jsonResponse) || $jsonResponse->status->code != 0) 

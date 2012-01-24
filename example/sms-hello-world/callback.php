@@ -1,7 +1,7 @@
 <?php
 
 /**
- * TAM: Example of OAuth callback processing
+ * CREATARY: Example of OAuth callback processing
  *
  * @author Mikhael Harswanto
  *

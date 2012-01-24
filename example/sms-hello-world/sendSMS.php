@@ -1,7 +1,7 @@
 <?php
 
 /**
- * TAM: Example of Sending SMS Through TAM API
+ * CREATARY: Example of Sending SMS Through Creatary API
  *
  * @author Mikhael Harswanto
  *
@@ -29,7 +29,7 @@
  */
 
 include_once "./include/defines.php";
-include_once "../../library/tam/sms.php";
+include_once "../../library/creatary/sms.php";
 
 // The user id of the application user, 
 // 	in this example we assume that there is only one user using the application
@@ -66,7 +66,7 @@ try
 			$accessToken = Common::requestAccessToken($usrId, $oauthToken, $oauthVerifier);
 			
 			// in this example we will redirect back to this page but with oauth_token param specified
-			// to show that once access token retrieved, we can use it in the future for directly call TAM APIs
+			// to show that once access token retrieved, we can use it in the future for directly call Creatary APIs
 			$appUrl = APP_HOST . "/" . $_SERVER['PHP_SELF'];
 			header("Location: " . $appUrl . "?oauth_token=" . $accessToken);
 		} 
