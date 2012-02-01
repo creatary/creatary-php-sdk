@@ -54,6 +54,7 @@ try
 	$parsedBody = json_decode($body);		
 	$oauthAccessToken = $parsedBody->access_token;
 	$oauthTokenSecret = $parsedBody->token_secret;
+	$transactionId = $parsedBody->transaction_id;
 	
 	//only for debug
 	//error_log("Access Token: " . $oauthAccessToken . "", 0);
@@ -102,7 +103,7 @@ try
 	}
 
 	// STEP 6:  Send or reply the SMS to the subscriber using Creatary Send SMS API.			
-	$jsonResponse = SMSApi::sendSMS($usrId, $smsReply);
+	$jsonResponse = SMSApi::sendSMS($usrId, $smsReply, null, $transactionId);
 			
 	if (is_null($jsonResponse) || $jsonResponse->status->code != 0) 
 	{
