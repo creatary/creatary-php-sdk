@@ -1,8 +1,8 @@
 <?php
 
 /**
- * CREATARY PHP Library for Location Interface
- * https://creatary.com
+ * TAM PHP Library for Location Interface
+ * https://code.telcoassetmarketplace.com/devcommunity/index.php/menudocumentation/menuapireference/menulocationinterface
  * 
  * Copyright (c) 2011 Nokia Siemens Networks
  * 
@@ -42,18 +42,9 @@ class LocationApi
 			$curlOptions[$key] = $option;
 		}
 		
-		$request = new OAuthRequester(CREATARY_API_GET_LOCATION_COORD_URL, 'GET');
-		$result = $request->doRequest($usr_id, $curlOptions);
-		if ($result['code'] == 200) 
-		{
-			// now we parse the json response from the API call
-			$jsonResponse = json_decode($result['body']);
-			
-			return $jsonResponse;
-		} else 
-		{
-			return null;
-		}
+		$request = new OAuthRequester(TAM_API_GET_LOCATION_COORD_URL, 'GET');
+		
+		return Common::doRequest($request, $usr_id, $curlOptions);
 	}
 
 }

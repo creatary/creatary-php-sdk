@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Creatary PHP Library Commons
+ * TAM PHP Library Commons
  * 
  * Copyright (c) 2011 Nokia Siemens Networks
  * 
@@ -25,17 +25,17 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-define("CREATARY_HOST", "https://telcoassetmarketplace.com");
-define("CREATARY_API_URL", CREATARY_HOST . "/api/1");
+define("TAM_HOST", "https://telcoassetmarketplace.com");
+define("TAM_API_URL", TAM_HOST . "/api/1");
 
 //OAuth Interfaces
-define("CREATARY_REQUEST_TOKEN_URL", CREATARY_API_URL . "/oauth/request_token");
-define("CREATARY_AUTHORIZE_URL", CREATARY_HOST . "/web/authorize");
-define("CREATARY_ACCESS_TOKEN_URL", CREATARY_API_URL . "/oauth/access_token");
+define("TAM_REQUEST_TOKEN_URL", TAM_API_URL . "/oauth/request_token");
+define("TAM_AUTHORIZE_URL", TAM_HOST . "/web/authorize");
+define("TAM_ACCESS_TOKEN_URL", TAM_API_URL . "/oauth/access_token");
 
 //Other Interfaces
-define("CREATARY_API_SEND_SMS_URL", CREATARY_API_URL . "/sms/send");
-define("CREATARY_API_GET_LOCATION_COORD_URL", CREATARY_API_URL . "/location/getcoord");
+define("TAM_API_SEND_SMS_URL", TAM_API_URL . "/sms/send");
+define("TAM_API_GET_LOCATION_COORD_URL", TAM_API_URL . "/location/getcoord");
 
 require_once dirname(__FILE__) . "/../oauth/OAuthStore.php";
 require_once dirname(__FILE__) . "/../oauth/OAuthRequester.php";
@@ -43,12 +43,12 @@ require_once dirname(__FILE__) . "/../oauth/OAuthRequester.php";
 class Common 
 {
 	static private $server = array(
-									'consumer_key' => CREATARY_CONSUMER_KEY, 
-									'consumer_secret' => CREATARY_CONSUMER_SECRET,
-									'server_uri' => CREATARY_HOST,
-									'request_token_uri' => CREATARY_REQUEST_TOKEN_URL,
-									'authorize_uri' => CREATARY_AUTHORIZE_URL,
-									'access_token_uri' => CREATARY_ACCESS_TOKEN_URL,
+									'consumer_key' => TAM_CONSUMER_KEY, 
+									'consumer_secret' => TAM_CONSUMER_SECRET,
+									'server_uri' => TAM_HOST,
+									'request_token_uri' => TAM_REQUEST_TOKEN_URL,
+									'authorize_uri' => TAM_AUTHORIZE_URL,
+									'access_token_uri' => TAM_ACCESS_TOKEN_URL,
 									'signature_methods' => 'HMAC-SHA1'
 								);
 								
@@ -95,15 +95,15 @@ class Common
 	static function requestRequestToken($usrId, $callbackUrl = "")
 	{
 		// get a request token
-		$tokenResultParams = OAuthRequester::requestRequestToken(CREATARY_CONSUMER_KEY, $usrId, 0, 'GET', null, Common::$curlOptions);
+		$tokenResultParams = OAuthRequester::requestRequestToken(TAM_CONSUMER_KEY, $usrId, 0, 'GET', null, Common::$curlOptions);
 
-		//  redirect to the CREATARY authorization page, it will redirect back
+		//  redirect to the TAM authorization page, it will redirect back
 		$callback = "";
 		if (!empty($callbackUrl)) 
 		{
 			$callback = "&oauth_callback=" . $callbackUrl;
 		}
-		header("Location: " . CREATARY_AUTHORIZE_URL . "?oauth_token=" . $tokenResultParams['token'] . $callback);
+		header("Location: " . TAM_AUTHORIZE_URL . "?oauth_token=" . $tokenResultParams['token'] . $callback);
 	}
 	
 	static function requestAccessToken($usrId, $oauthToken, $oauthVerifier = "")
@@ -118,11 +118,11 @@ class Common
 			$getAuthTokenParams = null;
 		}
 			
-		OAuthRequester::requestAccessToken(CREATARY_CONSUMER_KEY, $oauthToken, $usrId, 'GET', $getAuthTokenParams, Common::$curlOptions);
+		OAuthRequester::requestAccessToken(TAM_CONSUMER_KEY, $oauthToken, $usrId, 'GET', $getAuthTokenParams, Common::$curlOptions);
 				
 		$store	= OAuthStore::instance();
 		// get the stored access token for this user
-		$oauth = $store->getSecretsForSignature(CREATARY_ACCESS_TOKEN_URL, $usrId);
+		$oauth = $store->getSecretsForSignature(TAM_ACCESS_TOKEN_URL, $usrId);
 		
 		return $oauth['token'];
 	}
@@ -130,7 +130,24 @@ class Common
 	static function storeAccessToken($usrId, $oauthToken, $tokenSecret) 
 	{
 		$store = OAuthStore::instance();
-    	$store->addServerToken(CREATARY_CONSUMER_KEY, 'access', $oauthToken, $tokenSecret, $usrId);
+    	$store->addServerToken(TAM_CONSUMER_KEY, 'access', $oauthToken, $tokenSecret, $usrId);
+	}
+	
+	static function doRequest($request, $usr_id, $curlOptions) 
+	{
+		try {
+			$result = $request->doRequest($usr_id, $curlOptions);
+
+			// now we parse the json response from the API call
+			$jsonResponse = json_decode($result['body']);
+		} catch (OAuthException2 $e) {
+			$message = $e->getMessage();
+			$messages = preg_split("/: /", $message, 2);
+			
+			$jsonResponse = json_decode($messages[1]);
+		}
+		
+		return $jsonResponse;
 	}
 	
 	static function resetOAuth () 

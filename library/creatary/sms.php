@@ -1,8 +1,8 @@
 <?php
 
 /**
- * CREATARY PHP Library for SMS Interface
- * https://creatary.com
+ * TAM PHP Library for SMS Interface
+ * https://code.telcoassetmarketplace.com/devcommunity/index.php/menudocumentation/menuapireference/menusmsinterface
  * 
  * Copyright (c) 2011 Nokia Siemens Networks
  * 
@@ -54,18 +54,9 @@ class SMSApi
 			$curlOptions[$key] = $option;
 		}
 		
-		$request = new OAuthRequester(CREATARY_API_SEND_SMS_URL, 'POST');
-		$result = $request->doRequest($usr_id, $curlOptions);
-		if ($result['code'] == 200) 
-		{
-			// now we parse the json response from the API call
-			$jsonResponse = json_decode($result['body']);
-			
-			return $jsonResponse;
-		} else 
-		{
-			return null;
-		}
+		$request = new OAuthRequester(TAM_API_SEND_SMS_URL, 'POST');
+		
+		return Common::doRequest($request, $usr_id, $curlOptions);
 	}
 
 }
