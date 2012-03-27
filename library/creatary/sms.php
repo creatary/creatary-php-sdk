@@ -54,7 +54,7 @@ class SMSApi
 			$curlOptions[$key] = $option;
 		}
 		
-		$request = new OAuthRequester(TAM_API_SEND_SMS_URL, 'POST');
+		$request = new OAuthRequester(CREATARY_API_SEND_SMS_URL, 'POST');
 		
 		return Common::doRequest($request, $usr_id, $curlOptions);
 	}

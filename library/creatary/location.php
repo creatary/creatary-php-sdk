@@ -42,7 +42,7 @@ class LocationApi
 			$curlOptions[$key] = $option;
 		}
 		
-		$request = new OAuthRequester(TAM_API_GET_LOCATION_COORD_URL, 'GET');
+		$request = new OAuthRequester(CREATARY_API_GET_LOCATION_COORD_URL, 'GET');
 		
 		return Common::doRequest($request, $usr_id, $curlOptions);
 	}
